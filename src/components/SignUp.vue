@@ -17,13 +17,13 @@
                 <input type="text" v-model="user.apellidos" placeholder="Apellidos">
                 <br>
 
-                <input type="number" v-model="user.noIdentificacion" placeholder="Identificacion">
+                <input type="text" v-model="user.noIdentificacion" placeholder="Identificacion">
                 <br>
 
                 <input type="text" v-model="user.direccion" placeholder="Dirección">
                 <br>
 
-                <input type="number" v-model="user.telefono" placeholder="Telefono">
+                <input type="text" v-model="user.telefono" placeholder="Telefono">
                 <br>
 
                 <input type="email" v-model="user.email" placeholder="Correo Electrónico">
@@ -42,7 +42,7 @@
 import gql from "graphql-tag";
 
 export default {
-    name: "SignUp",
+    name: "createUser",
 
     data: function() {
         return {
@@ -64,29 +64,31 @@ export default {
       await this.$apollo
         .mutate({
           mutation: gql`
-            mutation($userInput: SignUpInput!) {
-              signUpUser(userInput: $userInput) {
+            mutation($user:User!) {
+              createUser(user:$user) {
                 refresh
                 access
               }
             }
           `,
           variables: {
-            userInput: this.user,
+            user: this.user,
           },
         })
         .then((result) => {
           let dataLogIn = {
             username: this.user.username,
-            token_access: result.data.signUpUser.access,
-            token_refresh: result.data.signUpUser.refresh,
+            token_access: result.data.createUser.access,
+            token_refresh: result.data.createUser.refresh,
           };
 
           this.$emit("completedSignUp", dataLogIn);
         })
         .catch((error) => {
           alert("ERROR: Fallo en el registro.");
+          
         });
+        console.error("problema");
     },
 
   },
