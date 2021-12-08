@@ -1,17 +1,26 @@
 <template>
+  <div class="Pasadia">
 
-  <div id="Pasadia" class="Pasadia">
     <div class="container_pasadia">
-      <h2>Comprar Pasadia</h2>
+      <h2>Pasadia</h2>
+      <form v-on:submit.prevent="createPasadia" >
+                <input type="text" v-model="pasadia.idpas" placeholder="ID Hotel">
+                <br>
+                
+                <input type="text" v-model="pasadia.nombreHotel" placeholder="Nombre Hotel">
+                <br>
+                
+                <input type="text" v-model="pasadia.ciudad" placeholder="Ciudad">
+                <br>
 
-      <form v-on:submit.prevent="processPasadia">
-        <input
-          type="text"
-          v-model="Pasadia"
-          placeholder="Pasadia"
-        />
-        <button type="submit">Comprar Pasadia</button>
-      </form>
+                <input type="Date" v-model="pasadia.fechaIn" placeholder="Fecha Ingreso">
+                <br>
+
+                <input type="number" v-model="pasadia.valorPasadia" placeholder="Valor Pasadia">
+                <br>
+
+                <button type="submit">Comprar Pasadia</button>
+                </form>
     </div>
   </div>
 
@@ -19,56 +28,33 @@
 
 
 <script>
-/*import gql from "graphql-tag";
+import gql from "graphql-tag";
 
 export default {
-  name: "Pasadia",
+  name: "createPasadia",
 
-  data: function() {
+  data: function () {
     return {
-      createPasadia: {
-        //idhotel"Origin: localStorage.getItem("idhotel")
+    pasadia:{
+    idpas: "",
+    nombreHotel: "",
+    ciudad: "",
+    fechaIn: "",
+    valorPasadia: 0,
       },
-    };
-  },
+      };
+    },
+    
 
-  methods: {
-    processPasadia: async function() {
-      
-      if (localStorage.getItem("token_access")  === null ||
-          localStorage.getItem("token_refresh") === null ) {
-        this.$emit("logOut");
-        return;
-      }
-
-      localStorage.setItem("token_access", "");
-
+methods: { 
+  createPasadia: async function() {
+    
       await this.$apollo
+      
         .mutate({
           mutation: gql`
-            mutation ($refresh: String!) {
-              refreshToken(refresh: $refresh) {
-                access
-              }
-            }
-          `,
-          variables: {
-            refresh: localStorage.getItem("token_refresh"),
-          },
-        })
-        .then((result) => {
-          localStorage.setItem("token_access", result.data.refreshToken.access);
-        })
-        .catch((error) => {
-          this.$emit("logOut");
-          return;
-        });
-      
-      await this.$apollo
-        .mutate({
-          mutation: gql`
-            mutation($pasadia: PasadiaInput!) {
-              createPasadia(pasadia: $pasadia) {
+            mutation($pasadia: Pasadia!) {
+              createReserva(pasadia: $pasadia) {
                 idpas
                 idpasadia
                 nombreHotel
@@ -79,82 +65,101 @@ export default {
             }
           `,
           variables: {
-            pasadia: this.createPasadia,
+            reserva: this.reserva,
+            
           },
         })
         .then((result) => {
-          alert("Pasadia adquirido de Manera Correcta, Revise Historial");
+          alert(result);
+          let dataLogIn = {
+            idpas: this.reserva.idpas,
+            token_access: result.data.createPasadia.access,
+            token_refresh: result.data.createPasadia.refresh,
+            
+          };
+
+          this.$emit("completedPasadia", dataLogIn);
         })
         .catch((error) => {
-          alert("No se encontró pasadia o no está disponible");
-        });
-    },
+          alert("No hay pasadias disponibles");
+          });
+        
+  }
   },
-}; */
+
+
+}
 </script>
 
 
-<style>
+/*<style>
+ .Pasadia{
+        margin: 0;
+        padding: 0%;
+        height: 100%;
+        width: 100%;
+    
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: url("../assets/pool-in-paradise-1363196.jpg");
+        background-size: 100%;
+        background-position: 0%;
+        
+    }
 
-.pasadia {
-  margin: 0;
-  padding: 0%;
-  height: 100%;
-  width: 100%;
+        .container_pasadia {
+        
+        border-radius: 20px;
+        width: 25%;
+        height: 70%;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to bottom right , #0230fc, white);
+    }
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .Pasadia h2{
+        color: #f9fbfc;
 
-.container_pasadia {
-  border: 3px solid #283747;
-  border-radius: 10px;
-  width: 25%;
-  height: 60%;
+    }
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+    .Pasadia form{
+        width: 70%;
+        
+        
+    }
 
-.pasadia h2 {
-  color: #283747;
-}
+    .Pasadia input{
+        height: 40px;
+        width: 100%;
 
-.pasadia form {
-  width: 50%;
-}
+        box-sizing: border-box;
+        padding: 10px 20px;
+        margin: 5px 0;
+        border-radius: 20px;
 
-.pasadia input {
-  height: 40px;
-  width: 100%;
+        
+    }
 
-  box-sizing: border-box;
-  padding: 10px 20px;
-  margin: 5px 0;
+    .Pasadia button{
+        width: 100%;
+        height: 40px;
 
-  border: 1px solid #283747;
-}
+        color: #E5E7E9;
+        background: #283747;
+        border: 1px solid #E5E7E9;
 
-.pasadia button {
-  width: 100%;
-  height: 40px;
+        border-radius:20px;
+        padding: 10px 25px;
+        margin: 5px 0;
+    }
 
-  color: #e5e7e9;
-  background: #283747;
-  border: 1px solid #e5e7e9;
-
-  border-radius: 5px;
-  padding: 10px 25px;
-  margin: 5px 0;
-}
-
-.pasadia button:hover {
-  color: #e5e7e9;
-  background: crimson;
-  border: 1px solid #283747;
-}
-
+    .Pasadia button:hover{
+        color: #E5E7E9;
+        background: #fc6501;
+        border: 1px solid #283747;
+    }
 </style>

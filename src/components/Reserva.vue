@@ -1,43 +1,31 @@
 <template>
-  <div id="Historial">
+  <div class="Reserva">
 
-    <div class="container">
-      <h2>
-        Titular Cuenta:
-        <span>{{ username }}</span>
-      </h2>
-      <h2>
-        Saldo:
-        <span>${{ accountByUsername.balance }} COP</span>
-      </h2>
-      <h2>
-        Último Movimiento:
-        <span>
-          {{ accountByUsername.lastChange.substring(0, 10) }}  
-          {{ accountByUsername.lastChange.substring(11, 19) }}
-        </span>
-      </h2>
-    </div>
+    <div class="container_Reserva">
+      <h2>Reserva</h2>
+      <form v-on:submit.prevent="createReserva" >
+                <input type="text" v-model="reserva.idres" placeholder="ID Hotel">
+                <br>
+                
+                <input type="text" v-model="reserva.nombreHotel" placeholder="Nombre Hotel">
+                <br>
+                
+                <input type="text" v-model="reserva.ciudad" placeholder="Ciudad">
+                <br>
 
-    <h2>Transacciones</h2>     
-    <div class="container-table">
-        <table>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Origen</th>
-                <th>Destino</th>
-                <th>Valor</th>
-            </tr>
+                <input type="Date" v-model="reserva.fechaIn" placeholder="Fecha Ingreso">
+                <br>
 
-            <tr v-for="transaction in transactionByUsername" :key="transaction.id">
-                <td>{{ transaction.date.substring(0, 10) }}</td>
-                <td>{{ transaction.date.substring(11, 19) }}</td>
-                <td>{{ transaction.usernameOrigin }}</td>
-                <td>{{ transaction.usernameDestiny }}</td>
-                <td>${{ transaction.value }} COP</td>
-            </tr>
-        </table>
+                <input type="Date" v-model="reserva.fechaOut" placeholder="Fecha Salida">
+                <br>
+
+                <input type="text" v-model="reserva.habitacion" placeholder="N° Habitación">
+                <br>
+
+                <input type="number" v-model="reserva.valorHabitacion" placeholder="Valor Habitación">
+                <br>
+                <button type="submit">Reservar</button>
+                </form>
     </div>
   </div>
 
@@ -45,132 +33,137 @@
 
 
 <script>
-/*import gql from "graphql-tag";
+import gql from "graphql-tag";
 
 export default {
-  name: "Account",
+  name: "createReserva",
 
   data: function () {
     return {
-      username: localStorage.getItem("username") || "none",
-      transactionByUsername: [],
-      accountByUsername: {
-        balance: "",
-        lastChange: "",
-      }
-    };
-  },
-
-  apollo: {
-    transactionByUsername: {
-      query: gql`
-        query ($username: String!) {
-          transactionByUsername(username: $username) {
-            id
-            usernameOrigin
-            usernameDestiny
-            value
-            date
-          }
-        }
-      `,
-      variables() {
-        return {
-          username: this.username,
-        };
+    reserva:{
+    idres: "",
+    nombreHotel: "",
+    ciudad: "",
+    fechaIn: "",
+    fechaOut: "",
+    habitacion: "",
+    valorHabitacion: 0,
       },
+      };
     },
+    
 
-    accountByUsername: {
-      query: gql`
-        query ($username: String!) {
-          accountByUsername(username: $username) {
-            balance
-            lastChange
-          }
-        }
-      `,
-      variables() {
-        return {
-          username: this.username,
-        };
-      },
-    },
-  },
+methods: { 
+  createReserva: async function() {
+    
+      await this.$apollo
+      
+        .mutate({
+          mutation: gql`
+            mutation($reserva: Reserva!) {
+              createReserva(reserva: $reserva) {
+                refresh
+                access
+                
+              }
+            }
+          `,
+          variables: {
+            reserva: this.reserva,
+            
+          },
+        })
+        .then((result) => {
+          alert(result);
+          let dataLogIn = {
+            idres: this.reserva.idres,
+            token_access: result.data.createReserva.access,
+            token_refresh: result.data.createReserva.refresh,
+            
+          };
 
-  created: function () {
-    this.$apollo.queries.transactionByUsername.refetch();
-    this.$apollo.queries.accountByUsername.refetch();
+          this.$emit("completedReserva", dataLogIn);
+        })
+        .catch((error) => {
+          alert("No hay habitaciones disponibles");
+          });
+        
   }
-};*/
+  },
+
+
+}
 </script>
 
 
-<style>
-#Historial {
-  width: 100%;
-
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-}
-
-#Historial .container-table{
-    width:50%;
+/*<style>
+.Reserva{
+        margin: 0;
+        padding: 0%;
+        height: 100%;
+        width: 100%;
     
-    max-height: 250px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to bottom , #0230fc, white);
+        background-image: url("../assets/hotel-room-1217627.jpg");
+        background-size: 100%;
+        background-position: 0%;
+        
+    }
 
-#Historial table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  
-}
+    .container_Reserva {
+        
+        border-radius: 20px;
+        width: 25%;
+        height: 80%;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(to bottom right , #0230fc, white);
+    }
 
-#Historial table td,
-#Historial table th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+    .Reserva h2{
+        color: #f9fbfc;
 
-#Historial table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+    }
 
-#Historial table tr:hover {
-  background-color: #ddd;
-}
+    .Reserva form{
+        width: 70%;
+        
+    }
 
-#Historial table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: crimson;
-  color: white;
-}
+    .Reserva input{
+        height: 40px;
+        width: 100%;
 
-#Historial > h2 {
-  color: #283747;
-  font-size: 25px;
-}
+        box-sizing: border-box;
+        padding: 10px 20px;
+        margin: 5px 0;
+        border-radius: 20px;
 
-#Historial .container {
-  padding: 30px;
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-  margin: 5% 0 1% 0;
-}
+        
+    }
 
-#Historial  .container h2 {
-  font-size: 25px;
-  color: #283747;
-}
-#Historial .container span {
-  color: crimson;
-  font-weight: bold;
-}
+    .Reserva button{
+        width: 100%;
+        height: 40px;
+
+        color: #E5E7E9;
+        background: #283747;
+        border: 1px solid #E5E7E9;
+
+        border-radius:20px;
+        padding: 10px 25px;
+        margin: 5px 0;
+    }
+
+    .Reserva button:hover{
+        color: #E5E7E9;
+        background: #fc6501;
+        border: 1px solid #283747;
+    }
 </style>

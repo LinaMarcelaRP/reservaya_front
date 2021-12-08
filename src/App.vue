@@ -3,10 +3,11 @@
   <div id="app" class="app">
 
     <div class="header">
+      <img src="./assets/res.png" alt="Logo">
 
-      <h1> ReservaYa </h1>
+      <h1> !Viaja en familia¡ </h1>
       <nav>
-        <button v-if="is_auth" v-on:click="loadHome"> Inicio </button>
+        <button v-if="is_auth" v-on:click="loadHome">Inicio </button>
         <button v-if="is_auth" v-on:click="loadReserva"> Reserva </button>
         <button v-if="is_auth" v-on:click="loadPasadia"> Pasadia </button>
         <button v-if="is_auth" v-on:click="logOut"> Cerrar Sesión </button>
@@ -27,7 +28,7 @@
     
 
     <div class="footer">
-      <h2>ReservaYa</h2>
+      <h5> Reserva Ya Todos los derechos reservados. created by grupo 7 P72C4DW Mision Tic  </h5>
     </div>
 
   </div>
@@ -59,44 +60,52 @@ export default {
     },
 
     completedLogIn: function(data) {
-			localStorage.setItem("username", data.username);
-			localStorage.setItem("token_access", data.token_access);
-			localStorage.setItem("token_refresh", data.token_refresh);
-			alert("Autenticación Exitosa");
-			this.loadHome();
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("token_access", data.token_access);
+      localStorage.setItem("token_refresh", data.token_refresh);
+      alert("Autenticación Exitosa");
+      this.loadHome();
     },
 
     completedSignUp: function(data) {
-			alert("Registro Exitoso");
-			this.completedLogIn(data);
+      alert("Registro Exitoso");
+      this.completedLogIn(data);
     },
+
+     completedReserva: function(data) {
+      alert("Reserva realizada con éxito");
+      this.completedReserva(data);
+      },
 
     loadHome: function() {
       this.$router.push({ name: "home" });
     },
 
-    loadAccount: function () {
-			this.$router.push({ name: "reserva" });
-		},
+    loadReserva: function () {
+      this.$router.push({ name: "reserva" });
+    },
 
-    loadTransaction: function(){
+    loadPasadia: function(){
       this.$router.push({ name: "pasadia" });
     },
 
     logOut: function () {
-			localStorage.clear();
-			alert("Sesión Cerrada");
+      localStorage.clear();
+      alert("Sesión Cerrada");
       this.loadLogIn();
-		},
+    },
   }
 }
+
 </script>
+
 
 
 <style>
 
   body{
     margin: 0 0 0 0;
+    background: linear-gradient(to top right, #0230fc, white);
   }
 
   .header{
@@ -106,11 +115,11 @@ export default {
     height: 10vh; 
     min-height: 100px;
 
-    background-color: #283747 ;
+    background: linear-gradient(to top  , #0230fc, white);
     color:#E5E7E9  ;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
   }
 
@@ -132,10 +141,10 @@ export default {
 
   .header nav button{
     color: #E5E7E9;
-    background: #283747;
-    border: 1px solid #E5E7E9;
+    background: #fc6501;
+   
 
-    border-radius: 5px;
+    border-radius: 20px;
     padding: 10px 20px;
   }
 
@@ -159,15 +168,15 @@ export default {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 10vh;
+    height: 5vh;
     min-height: 100px; 
 
-    background-color: #283747;
-    color: #E5E7E9;
+    background: linear-gradient(to bottom  , #3b5cf0, rgb(250, 184, 3));
+    color: #062bff;
 
   }
 
-  .footer h2{
+  .footer h5{
     width: 100%;
     height: 100%;
     
