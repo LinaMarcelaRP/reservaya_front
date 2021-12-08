@@ -78,11 +78,13 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        background: linear-gradient(to bottom , #0230fc, white);
+        
     }
 
     .container_logIn_user {
-        border: 3px solid  #283747;
-        border-radius: 10px;
+        
+        border-radius: 20px;
         width: 25%;
         height: 60%;
         
@@ -90,10 +92,11 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        background: linear-gradient(to bottom right , #0230fc, white);
     }
 
     .logIn_user h2{
-        color: #283747;
+        color: #f9fbfc;
 
     }
 
@@ -109,8 +112,9 @@ export default {
         box-sizing: border-box;
         padding: 10px 20px;
         margin: 5px 0;
+        border-radius: 20px;
 
-        border: 1px solid #283747;
+        
     }
 
     .logIn_user button{
@@ -121,7 +125,7 @@ export default {
         background: #283747;
         border: 1px solid #E5E7E9;
 
-        border-radius: 5px;
+        border-radius:20px;
         padding: 10px 25px;
         margin: 5px 0;
     }
