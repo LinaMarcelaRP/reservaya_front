@@ -4,7 +4,7 @@
         <div class="container_signUp_user">
             <h2>Registrarse</h2>
 
-            <form v-on:submit.prevent="processSignUp" >
+            <form v-on:submit.prevent="processcreateUser" >
                 <input type="text" v-model="user.username" placeholder="Usuario">
                 <br>
                 
@@ -17,7 +17,7 @@
                 <input type="text" v-model="user.apellidos" placeholder="Apellidos">
                 <br>
 
-                <input type="number" v-model="user.noIdentificacion" placeholder="Identificacion">
+                <input type="number" v-model="user.noIdentificacion" placeholder="Identificación">
                 <br>
 
                 <input type="text" v-model="user.direccion" placeholder="Dirección">
@@ -42,7 +42,7 @@
 import gql from "graphql-tag";
 
 export default {
-    name: "SignUp",
+    name: "createUser",
 
     data: function() {
         return {
@@ -60,12 +60,12 @@ export default {
     },
 
   methods: {
-    processSignUp: async function() {
+    processcreateUser: async function() {
       await this.$apollo
         .mutate({
           mutation: gql`
-            mutation($userInput: SignUpInput!) {
-              signUpUser(userInput: $userInput) {
+            mutation {
+              createUser(user: $user) {
                 refresh
                 access
               }
@@ -78,11 +78,11 @@ export default {
         .then((result) => {
           let dataLogIn = {
             username: this.user.username,
-            token_access: result.data.signUpUser.access,
-            token_refresh: result.data.signUpUser.refresh,
+            token_access: result.data.createUser.access,
+            token_refresh: result.data.createUser.refresh,
           };
 
-          this.$emit("completedSignUp", dataLogIn);
+          this.$emit("completedcreateUser", dataLogIn);
         })
         .catch((error) => {
           alert("ERROR: Fallo en el registro.");
